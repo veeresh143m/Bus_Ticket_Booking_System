@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Select Seats</title>
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(to right, #e0eafc, #cfdef3);
+        text-align: center;
+        margin: 0;
+    }
+    h2 {
+        margin-top: 20px;
+        color: #0f172a;
+    }
+    .bus {
+        margin: 30px auto;
+        width: 320px;
+        background: #ffffff;
+        padding: 25px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        position: relative;
+    }
+    /* Driver */
+    .driver {
+        position: absolute;
+        top: 10px;
+        left: 15px;
+        font-size: 18px;
+    }
+    .row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+    }
+    .seat {
+        position: relative;
+    }
+    .seat input {
+        display: none;
+    }
+    .seat label {
+        display: block;
+        width: 50px;
+        height: 50px;
+        background: #e2e8f0;
+        border-radius: 12px;
+        line-height: 50px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        box-shadow: inset 0 -3px 0 rgba(0,0,0,0.1);
+    }
+    /* Hover effect */
+    .seat label:hover {
+        background: #60a5fa;
+        color: white;
+        transform: scale(1.05);
+    }
+    /* Selected */
+    .seat input:checked + label {
+        background: #22c55e;
+        color: white;
+        box-shadow: 0 0 10px rgba(34,197,94,0.8);
+    }
+    /* Booked */
+    .booked label {
+        background: #94a3b8;
+        cursor: not-allowed;
+        color: white;
+    }
+    .aisle {
+        width: 30px;
+    }
+    button {
+        margin-top: 20px;
+        padding: 12px 30px;
+        background: linear-gradient(to right, #2563eb, #1e3a8a);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    button:hover {
+        transform: scale(1.05);
+    }
+    .legend {
+        margin-top: 20px;
+    }
+    .legend span {
+        display: inline-block;
+        margin: 8px;
+    }
+    .box {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        border-radius: 4px;
+        margin-right: 5px;
+    }
+    .available { background: #e2e8f0; }
+    .selected { background: #22c55e; }
+    .occupied { background: #94a3b8; }
+</style>
+</head>
+<body>
+<h2>🚌 Select Your Seats</h2>
+<form method="post" action="/passenger/">
+{% csrf_token %}
+<div class="bus">
+    <div class="driver">🧑‍✈️</div>
+    <!-- Generate 6 rows (24 seats) -->
+    <!-- Row 1 -->
+    <div class="row">
+        <div class="seat"><input type="checkbox" id="s1" name="seat" value="1"><label for="s1">1</label></div>
+        <div class="seat"><input type="checkbox" id="s2" name="seat" value="2"><label for="s2">2</label></div>
+        <div class="aisle"></div>
+        <div class="seat"><input type="checkbox" id="s3" name="seat" value="3"><label for="s3">3</label></div>
+        <div class="seat"><input type="checkbox" id="s4" name="seat" value="4"><label for="s4">4</label></div>
+    </div>
+    <!-- Row 2 -->
+    <div class="row">
+        <div class="seat"><input type="checkbox" id="s5" name="seat" value="5"><label for="s5">5</label></div>
+        <div class="seat"><input type="checkbox" id="s6" name="seat" value="6"><label for="s6">6</label></div>
+        <div class="aisle"></div>
+        <div class="seat"><input type="checkbox" id="s7" name="seat" value="7"><label for="s7">7</label></div>
+        <div class="seat"><input type="checkbox" id="s8" name="seat" value="8"><label for="s8">8</label></div>
+    </div>
+    <!-- Row 3 -->
+    <div class="row">
+        <div class="seat"><input type="checkbox" id="s9" name="seat" value="9"><label for="s9">9</label></div>
+        <div class="seat"><input type="checkbox" id="s10" name="seat" value="10"><label for="s10">10</label></div>
+        <div class="aisle"></div>
+        <div class="seat"><input type="checkbox" id="s11" name="seat" value="11"><label for="s11">11</label></div>
+        <div class="seat"><input type="checkbox" id="s12" name="seat" value="12"><label for="s12">12</label></div>
+    </div>
+    <!-- Row 4 -->
+    <div class="row">
+        <div class="seat"><input type="checkbox" id="s13" name="seat" value="13"><label for="s13">13</label></div>
+        <div class="seat"><input type="checkbox" id="s14" name="seat" value="14"><label for="s14">14</label></div>
+        <div class="aisle"></div>
+        <div class="seat"><input type="checkbox" id="s15" name="seat" value="15"><label for="s15">15</label></div>
+        <div class="seat"><input type="checkbox" id="s16" name="seat" value="16"><label for="s16">16</label></div>
+    </div>
+    <!-- Row 5 -->
+    <div class="row">
+        <div class="seat"><input type="checkbox" id="s17" name="seat" value="17"><label for="s17">17</label></div>
+        <div class="seat"><input type="checkbox" id="s18" name="seat" value="18"><label for="s18">18</label></div>
+        <div class="aisle"></div>
+        <div class="seat"><input type="checkbox" id="s19" name="seat" value="19"><label for="s19">19</label></div>
+        <div class="seat"><input type="checkbox" id="s20" name="seat" value="20"><label for="s20">20</label></div>
+    </div>
+    <!-- Row 6 -->
+    <div class="row">
+        <div class="seat"><input type="checkbox" id="s21" name="seat" value="21"><label for="s21">21</label></div>
+        <div class="seat"><input type="checkbox" id="s22" name="seat" value="22"><label for="s22">22</label></div>
+        <div class="aisle"></div>
+        <div class="seat"><input type="checkbox" id="s23" name="seat" value="23"><label for="s23">23</label></div>
+        <div class="seat"><input type="checkbox" id="s24" name="seat" value="24"><label for="s24">24</label></div>
+    </div>
+</div>
+<button type="submit">Continue</button>
+</form>
+<div class="legend">
+    <span><span class="box available"></span> Available</span>
+    <span><span class="box selected"></span> Selected</span>
+    <span><span class="box occupied"></span> Booked</span>
+</div>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!DOCTYPE>
+<html>
+<head>
+<title>Booking Success</title>
+<style>
+    body {
+        font-family: 'Segoe UI', sans-serif;
+        background: linear-gradient(to right, #1e293b, #0f172a);
+        margin: 0;
+        text-align: center;
+        color: white;
+    }
+    .container {
+        margin-top: 50px;
+    }
+    .success {
+        font-size: 32px;
+        color: #22c55e;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+    .ticket {
+        width: 650px; /* increased width */
+        margin: 30px auto;
+        background: #111827;
+        border-radius: 20px;
+        padding: 35px;
+        box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+        position: relative;
+        text-align: left;
+    }
+    /* Side cut design */
+    .ticket::before, .ticket::after {
+        content: "";
+        position: absolute;
+        width: 25px;
+        height: 25px;
+        background: #0f172a;
+        border-radius: 50%;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    .ticket::before { left: -12px; }
+    .ticket::after { right: -12px; }
+    .title {
+        font-size: 22px;
+        font-weight: bold;
+        margin-bottom: 20px;
+        color: #facc15; /* gold */
+    }
+
+    .row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 12px;
+        font-size: 16px;
+    }
+
+    .highlight {
+        font-weight: bold;
+        color: #e2e8f0;
+    }
+    .divider {
+        border-top: 1px dashed #475569;
+        margin: 20px 0;
+    }
+    .status {
+        color: #22c55e;
+        font-weight: bold;
+    }
+    .btn {
+        margin-top: 25px;
+        display: inline-block;
+        padding: 14px 30px;
+        background: linear-gradient(to right, #2563eb, #1e40af);
+        color: white;
+        border-radius: 12px;
+        text-decoration: none;
+        font-size: 16px;
+        transition: 0.3s;
+    }
+
+    .btn:hover {
+        transform: scale(1.05);
+    }
+</style>
+</head>
+<body>
+<div class="container">
+    <div class="success"> Booking Confirmed</div>
+    <p>Your ticket is successfully booked!</p>
+      </div>
+    <div class="ticket">
+        <div class="title">🚌 Bus Ticket</div>
+        <div class="row">
+            <span>Bus ID:</span>
+            <span class="highlight">{{ request.session.bus }}</span>
+        </div>
+        <div class="row">
+            <span>Seats:</span>
+            <span class="highlight">{{ request.session.seat }}</span>
+        </div>
+        <div class="divider"></div>
+        <div class="title">🧍 Passenger Info</div>
+        <div class="row">
+            <span>Name:</span>
+            <span class="highlight">
+                {{ request.session.first_name }} {{ request.session.last_name }}
+            </span>
+        </div>
+        <div class="row">
+            <span>Mobile:</span>
+            <span class="highlight">{{ request.session.mobile }}</span>
+        </div>
+        <div class="row">
+            <span>Email:</span>
+            <span class="highlight">{{ request.session.email }}</span>
+        </div>
+        <div class="row">
+            <span>Address:</span>
+            <span class="highlight">{{ request.session.address }}</span>
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+            <span>Status:</span>
+            <span class="status">Confirmed ✅</span>
+        </div>
+    <a href="{% url 'home' %}" class="btn">Book Another Ticket</a>
+</div>
+</body>
+</html>
