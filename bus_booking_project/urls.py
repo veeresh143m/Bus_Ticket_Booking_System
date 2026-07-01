@@ -19,13 +19,33 @@ from django.urls import path
 from testapp import views
 urlpatterns = [
 
+    # path('admin/', admin.site.urls),
+    # path('', views.login_view, name='login'),
+    # path('register/', views.register_view, name='register'),
+    # path('home/', views.home_view, name='home'),
+    # path('seat/<int:id>/', views.seat_view, name='seat'),
+    # path('passenger/', views.passenger_view, name='passenger'),
+    # path('payment/', views.payment_view, name='payment'),
+    # path('success/', views.success_view, name='success'),
+
+    # Admin
     path('admin/', admin.site.urls),
+
+    # Auth
     path('', views.login_view, name='login'),
     path('register/', views.register_view, name='register'),
+    path('logout/', views.logout_view, name='logout'),
+
+    # Main Flow
     path('home/', views.home_view, name='home'),
     path('seat/<int:id>/', views.seat_view, name='seat'),
+
+    # Booking Flow
     path('passenger/', views.passenger_view, name='passenger'),
+    path('passenger-page/', views.passenger_page, name='passenger_page'),
     path('payment/', views.payment_view, name='payment'),
+
+    # Success Page
     path('success/', views.success_view, name='success'),
 
 

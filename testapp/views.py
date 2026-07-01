@@ -1,76 +1,174 @@
-from django.shortcuts import render,redirect
-from .models import *
-# # Create your views here.
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login, logout
+from django.db import transaction
+from django.utils import timezone
+from datetime import timedelta
+
+from .models import Bus, Seat, Booking, SeatLock
+# =========================
+# REGISTER
+# =========================
 def register_view(request):
     if request.method == "POST":
         username = request.POST.get('username')
         email = request.POST.get('email')
         password = request.POST.get('password')
-        User.objects.create(
+        if User.objects.filter(username=username).exists():
+            return render(request, 'testapp/register.html', {'error': 'User already exists'})
+        User.objects.create_user(
             username=username,
             email=email,
             password=password
         )
-        return redirect('home')
+        return redirect('login')
+
     return render(request, 'testapp/register.html')
 
+
+# =========================
 # LOGIN
+# =========================
 def login_view(request):
     if request.method == "POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
-        user = User.objects.filter(username=username, password=password)
+
+        user = authenticate(request, username=username, password=password)
+
         if user:
-            request.session['user'] = username
+            login(request, user)
             return redirect('home')
         else:
-            return render(request, 'testapp/login.html', {
-                'error': 'Invalid Username or Password'
-            })
+            return render(request, 'testapp/login.html', {'error': 'Invalid credentials'})
     return render(request, 'testapp/login.html')
-
+# =========================
+# HOME
+# =========================
 def home_view(request):
-    request.session.flush()   # 🔥 clears old session
     buses = Bus.objects.all()
     return render(request, 'testapp/home.html', {'buses': buses})
-
+# =========================
+# SEAT PAGE
+# =========================
 def seat_view(request, id):
-    bus = Bus.objects.get(id=id)
+    bus = get_object_or_404(Bus, id=id)
+    seats = Seat.objects.filter(bus=bus)
 
-    request.session['bus'] = bus.id   # ✅ FIXED
+    request.session['bus_id'] = bus.id
 
-    return render(request, 'testapp/seat.html', {'bus': bus})
+    return render(request, 'testapp/seat.html', {
+        'bus': bus,
+        'seats': seats
+    })
+# =========================
+# PASSENGER PAGE
+# =========================
 def passenger_view(request):
     if request.method == "POST":
-        seats = request.POST.getlist('seat')
-        if not seats:
-            return redirect('/home/')   # no seats selected
-        request.session['seat'] = seats   # ✅ correct
-        return render(request, 'testapp/passenger.html')
-    return redirect('/home/')   # ✅ FIXED
+        seat_ids = request.POST.getlist('seat')
 
+        if not seat_ids:
+            bus_id = request.session.get('bus_id')
+            bus = get_object_or_404(Bus, id=bus_id) if bus_id else None
+            seats = Seat.objects.filter(bus=bus) if bus else Seat.objects.none()
+
+            return render(request, 'testapp/seat.html', {
+                'bus': bus,
+                'seats': seats,
+                'error': 'Please select at least one seat'
+            })
+
+        request.session['seat_ids'] = seat_ids
+        return redirect('passenger_page')
+
+    return redirect('home')
+
+
+@transaction.atomic
 def payment_view(request):
-    if request.method == "POST":
-        request.session['first_name'] = request.POST.get('first_name')
-        request.session['last_name'] = request.POST.get('last_name')
-        request.session['mobile'] = request.POST.get('mobile')
-        request.session['email'] = request.POST.get('email')
-        request.session['address'] = request.POST.get('address')
-        request.session['age'] = request.POST.get('age')
-        request.session['gender'] = request.POST.get('gender')
+    if not request.user.is_authenticated:
+        return redirect('login')
 
-    bus_id = request.session.get('bus')
-    seats = request.session.get('seat')
-    if not bus_id or not seats:
-        return redirect('/success/')
-    bus = Bus.objects.get(id=bus_id)
-    seat_count = len(seats)
-    total_amount = bus.price * seat_count
-    return render(request, 'testapp/payment.html', {
-        'bus': bus,
-        'seats': seats,
-        'seat_count': seat_count,
-        'amount': total_amount
-    })
+    if request.method == "POST":
+        passenger_name = request.POST.get('passenger_name', '').strip()
+        mobile = request.POST.get('mobile', '').strip()
+        bus_id = request.session.get('bus_id')
+        seat_ids = request.session.get('seat_ids')
+
+        if not bus_id or not seat_ids:
+            return redirect('home')
+
+        if not passenger_name or not mobile:
+            return render(request, 'testapp/passenger.html', {
+                'error': 'Please enter your passenger name and mobile number'
+            })
+
+        bus = get_object_or_404(Bus, id=bus_id)
+        seats = list(Seat.objects.filter(id__in=seat_ids, bus=bus))
+
+        if len(seats) != len(seat_ids):
+            return redirect('home')
+
+        for seat in seats:
+            if seat.is_booked:
+                return render(request, 'testapp/payment.html', {
+                    'error': 'One or more selected seats are already booked'
+                })
+
+        booking = Booking.objects.create(
+            user=request.user,
+            bus=bus,
+            passenger_name=passenger_name,
+            mobile=mobile,
+            status='CONFIRMED'
+        )
+
+        booking.seats.set(seats)
+        Seat.objects.filter(id__in=[seat.id for seat in seats]).update(is_booked=True)
+        SeatLock.objects.filter(user=request.user).delete()
+
+        request.session['booking_id'] = booking.id
+        request.session['passenger_name'] = passenger_name
+        request.session['mobile'] = mobile
+
+        total_amount = bus.price * len(seats)
+        return render(request, 'testapp/payment.html', {
+            'bus': bus,
+            'seats': seats,
+            'seat_count': len(seats),
+            'amount': total_amount,
+            'booking': booking
+        })
+
+    return redirect('home')
+
+
+# =========================
+# SUCCESS PAGE
+# =========================
 def success_view(request):
-    return render(request, 'testapp/success.html')
+    booking_id = request.session.get('booking_id')
+
+    if not booking_id:
+        return redirect('home')
+
+    booking = get_object_or_404(Booking, id=booking_id)
+
+    return render(request, 'testapp/success.html', {
+        'booking': booking
+    })
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('login')
+
+
+def passenger_page(request):
+    if not request.session.get('bus_id') or not request.session.get('seat_ids'):
+        return redirect('home')
+
+    return render(request, 'testapp/passenger.html', {
+        'seat_ids': request.session.get('seat_ids', [])
+    })

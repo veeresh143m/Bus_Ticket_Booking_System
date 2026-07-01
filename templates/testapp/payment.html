@@ -1,3 +1,172 @@
+<!--<!DOCTYPE html>-->
+<!--<html>-->
+<!--<head>-->
+<!--<title>Payment</title>-->
+
+<!--<style>-->
+<!--    body {-->
+<!--        font-family: 'Segoe UI', sans-serif;-->
+<!--        background: #f1f5f9;-->
+<!--        margin: 0;-->
+<!--    }-->
+
+<!--    .container {-->
+<!--        width: 600px;-->
+<!--        margin: 40px auto;-->
+<!--    }-->
+
+<!--    .card {-->
+<!--        background: white;-->
+<!--        padding: 25px;-->
+<!--        border-radius: 15px;-->
+<!--        box-shadow: 0 10px 25px rgba(0,0,0,0.1);-->
+<!--        margin-bottom: 20px;-->
+<!--    }-->
+
+<!--    h2 {-->
+<!--        text-align: center;-->
+<!--        margin-bottom: 20px;-->
+<!--        color: #1e293b;-->
+<!--    }-->
+
+<!--    .title {-->
+<!--        font-size: 18px;-->
+<!--        font-weight: bold;-->
+<!--        margin-bottom: 10px;-->
+<!--        color: #0f172a;-->
+<!--    }-->
+
+<!--    .row {-->
+<!--        display: flex;-->
+<!--        justify-content: space-between;-->
+<!--        margin-bottom: 8px;-->
+<!--        color: #475569;-->
+<!--    }-->
+
+<!--    .highlight {-->
+<!--        font-weight: bold;-->
+<!--        color: #111827;-->
+<!--    }-->
+
+<!--    .amount {-->
+<!--        text-align: center;-->
+<!--        font-size: 24px;-->
+<!--        font-weight: bold;-->
+<!--        color: #16a34a;-->
+<!--        margin-top: 10px;-->
+<!--    }-->
+
+<!--    .pay-btn {-->
+<!--        width: 100%;-->
+<!--        padding: 14px;-->
+<!--        background: linear-gradient(to right, #22c55e, #15803d);-->
+<!--        color: white;-->
+<!--        border: none;-->
+<!--        border-radius: 10px;-->
+<!--        font-size: 18px;-->
+<!--        cursor: pointer;-->
+<!--        transition: 0.3s;-->
+<!--    }-->
+
+<!--    .pay-btn:hover {-->
+<!--        transform: scale(1.03);-->
+<!--    }-->
+
+<!--</style>-->
+<!--</head>-->
+
+<!--<body>-->
+
+<!--<div class="container">-->
+
+<!--    <h2>💳 Payment & Booking Summary</h2>-->
+
+<!--    &lt;!&ndash; Bus Details &ndash;&gt;-->
+<!--    <div class="card">-->
+<!--        <div class="title">🚌 Bus Details</div>-->
+
+<!--        <div class="row">-->
+<!--            <span>Bus Name:</span>-->
+<!--            <span class="highlight">{{ bus.name }}</span>-->
+<!--        </div>-->
+
+<!--        <div class="row">-->
+<!--            <span>Route:</span>-->
+<!--            <span class="highlight">{{ bus.source }} → {{ bus.destination }}</span>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Seat Details &ndash;&gt;-->
+<!--    <div class="card">-->
+<!--        <div class="title">🪑 Seat Details</div>-->
+
+<!--        <div class="row">-->
+<!--            <span>Selected Seats:</span>-->
+<!--            <span class="highlight">{{ seats }}</span>-->
+<!--        </div>-->
+
+<!--        <div class="row">-->
+<!--            <span>Total Seats:</span>-->
+<!--            <span class="highlight">{{ seat_count }}</span>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Passenger Details &ndash;&gt;-->
+<!--    <div class="card">-->
+<!--        <div class="title">🧍 Passenger Details</div>-->
+
+<!--        <div class="row">-->
+<!--            <span>Name:</span>-->
+<!--            <span class="highlight">-->
+<!--                {{ request.session.first_name }} {{ request.session.last_name }}-->
+<!--            </span>-->
+<!--        </div>-->
+
+<!--        <div class="row">-->
+<!--            <span>Mobile:</span>-->
+<!--            <span class="highlight">{{ request.session.mobile }}</span>-->
+<!--        </div>-->
+
+<!--        <div class="row">-->
+<!--            <span>Email:</span>-->
+<!--            <span class="highlight">{{ request.session.email }}</span>-->
+<!--        </div>-->
+
+<!--        <div class="row">-->
+<!--            <span>Address:</span>-->
+<!--            <span class="highlight">{{ request.session.address }}</span>-->
+<!--        </div>-->
+
+<!--        <div class="row">-->
+<!--            <span>Age:</span>-->
+<!--            <span class="highlight">{{ request.session.age }}</span>-->
+<!--        </div>-->
+
+<!--        <div class="row">-->
+<!--            <span>Gender:</span>-->
+<!--            <span class="highlight">{{ request.session.gender }}</span>-->
+<!--        </div>-->
+<!--    </div>-->
+
+<!--    &lt;!&ndash; Payment &ndash;&gt;-->
+<!--    <div class="card">-->
+
+<!--        <div class="amount">-->
+<!--            Total Amount: ₹{{ amount }}-->
+<!--        </div>-->
+
+<!--        <form method="POST" action="{% url 'success' %}">-->
+<!--        {% csrf_token %}-->
+<!--        <button type="submit" class="pay-btn">Pay Now</button>-->
+<!--        </form>-->
+
+<!--    </div>-->
+
+<!--</div>-->
+
+<!--</body>-->
+<!--</html>-->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -65,11 +234,13 @@
         border-radius: 10px;
         font-size: 18px;
         cursor: pointer;
-        transition: 0.3s;
     }
 
-    .pay-btn:hover {
-        transform: scale(1.03);
+    .error {
+        color: red;
+        text-align: center;
+        margin-bottom: 10px;
+        font-weight: bold;
     }
 
 </style>
@@ -81,7 +252,11 @@
 
     <h2>💳 Payment & Booking Summary</h2>
 
-    <!-- Bus Details -->
+    {% if error %}
+        <div class="error">{{ error }}</div>
+    {% endif %}
+
+    <!-- BUS DETAILS -->
     <div class="card">
         <div class="title">🚌 Bus Details</div>
 
@@ -92,17 +267,25 @@
 
         <div class="row">
             <span>Route:</span>
-            <span class="highlight">{{ bus.source }} → {{ bus.destination }}</span>
+            <span class="highlight">
+                {{ bus.source }} → {{ bus.destination }}
+            </span>
         </div>
     </div>
 
-    <!-- Seat Details -->
+    <!-- SEAT DETAILS -->
     <div class="card">
         <div class="title">🪑 Seat Details</div>
 
         <div class="row">
             <span>Selected Seats:</span>
-            <span class="highlight">{{ seats }}</span>
+            <span class="highlight">
+                {% for seat in seats %}
+                    {{ seat.seat_number }}{% if not forloop.last %}, {% endif %}
+                {% empty %}
+                    No seats selected
+                {% endfor %}
+            </span>
         </div>
 
         <div class="row">
@@ -111,53 +294,17 @@
         </div>
     </div>
 
-    <!-- Passenger Details -->
-    <div class="card">
-        <div class="title">🧍 Passenger Details</div>
-
-        <div class="row">
-            <span>Name:</span>
-            <span class="highlight">
-                {{ request.session.first_name }} {{ request.session.last_name }}
-            </span>
-        </div>
-
-        <div class="row">
-            <span>Mobile:</span>
-            <span class="highlight">{{ request.session.mobile }}</span>
-        </div>
-
-        <div class="row">
-            <span>Email:</span>
-            <span class="highlight">{{ request.session.email }}</span>
-        </div>
-
-        <div class="row">
-            <span>Address:</span>
-            <span class="highlight">{{ request.session.address }}</span>
-        </div>
-
-        <div class="row">
-            <span>Age:</span>
-            <span class="highlight">{{ request.session.age }}</span>
-        </div>
-
-        <div class="row">
-            <span>Gender:</span>
-            <span class="highlight">{{ request.session.gender }}</span>
-        </div>
-    </div>
-
-    <!-- Payment -->
+    <!-- AMOUNT -->
     <div class="card">
 
         <div class="amount">
             Total Amount: ₹{{ amount }}
         </div>
 
+        <!-- ✅ FINAL PAYMENT BUTTON -->
         <form method="POST" action="{% url 'success' %}">
-        {% csrf_token %}
-        <button type="submit" class="pay-btn">Pay Now</button>
+            {% csrf_token %}
+            <button type="submit" class="pay-btn">Confirm & Pay</button>
         </form>
 
     </div>
