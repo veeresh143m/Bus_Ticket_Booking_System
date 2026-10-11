@@ -1,264 +1,49 @@
-<!--<!DOCTYPE>-->
-<!--<html>-->
-<!--<head>-->
-<!--<title>Booking Success</title>-->
-<!--<style>-->
-<!--    body {-->
-<!--        font-family: 'Segoe UI', sans-serif;-->
-<!--        background: linear-gradient(to right, #1e293b, #0f172a);-->
-<!--        margin: 0;-->
-<!--        text-align: center;-->
-<!--        color: white;-->
-<!--    }-->
-<!--    .container {-->
-<!--        margin-top: 50px;-->
-<!--    }-->
-<!--    .success {-->
-<!--        font-size: 32px;-->
-<!--        color: #22c55e;-->
-<!--        margin-bottom: 10px;-->
-<!--        font-weight: bold;-->
-<!--    }-->
-<!--    .ticket {-->
-<!--        width: 650px; /* increased width */-->
-<!--        margin: 30px auto;-->
-<!--        background: #111827;-->
-<!--        border-radius: 20px;-->
-<!--        padding: 35px;-->
-<!--        box-shadow: 0 15px 40px rgba(0,0,0,0.5);-->
-<!--        position: relative;-->
-<!--        text-align: left;-->
-<!--    }-->
-<!--    /* Side cut design */-->
-<!--    .ticket::before, .ticket::after {-->
-<!--        content: "";-->
-<!--        position: absolute;-->
-<!--        width: 25px;-->
-<!--        height: 25px;-->
-<!--        background: #0f172a;-->
-<!--        border-radius: 50%;-->
-<!--        top: 50%;-->
-<!--        transform: translateY(-50%);-->
-<!--    }-->
-<!--    .ticket::before { left: -12px; }-->
-<!--    .ticket::after { right: -12px; }-->
-<!--    .title {-->
-<!--        font-size: 22px;-->
-<!--        font-weight: bold;-->
-<!--        margin-bottom: 20px;-->
-<!--        color: #facc15; /* gold */-->
-<!--    }-->
-
-<!--    .row {-->
-<!--        display: flex;-->
-<!--        justify-content: space-between;-->
-<!--        margin-bottom: 12px;-->
-<!--        font-size: 16px;-->
-<!--    }-->
-
-<!--    .highlight {-->
-<!--        font-weight: bold;-->
-<!--        color: #e2e8f0;-->
-<!--    }-->
-<!--    .divider {-->
-<!--        border-top: 1px dashed #475569;-->
-<!--        margin: 20px 0;-->
-<!--    }-->
-<!--    .status {-->
-<!--        color: #22c55e;-->
-<!--        font-weight: bold;-->
-<!--    }-->
-<!--    .btn {-->
-<!--        margin-top: 25px;-->
-<!--        display: inline-block;-->
-<!--        padding: 14px 30px;-->
-<!--        background: linear-gradient(to right, #2563eb, #1e40af);-->
-<!--        color: white;-->
-<!--        border-radius: 12px;-->
-<!--        text-decoration: none;-->
-<!--        font-size: 16px;-->
-<!--        transition: 0.3s;-->
-<!--    }-->
-
-<!--    .btn:hover {-->
-<!--        transform: scale(1.05);-->
-<!--    }-->
-<!--</style>-->
-<!--</head>-->
-<!--<body>-->
-<!--<div class="container">-->
-<!--    <div class="success"> Booking Confirmed</div>-->
-<!--    <p>Your ticket is successfully booked!</p>-->
-<!--      </div>-->
-<!--    <div class="ticket">-->
-<!--        <div class="title">🚌 Bus Ticket</div>-->
-<!--        <div class="row">-->
-<!--            <span>Bus ID:</span>-->
-<!--            <span class="highlight">{{ request.session.bus }}</span>-->
-<!--        </div>-->
-<!--        <div class="row">-->
-<!--            <span>Seats:</span>-->
-<!--            <span class="highlight">{{ request.session.seat }}</span>-->
-<!--        </div>-->
-<!--        <div class="divider"></div>-->
-<!--        <div class="title">🧍 Passenger Info</div>-->
-<!--        <div class="row">-->
-<!--            <span>Name:</span>-->
-<!--            <span class="highlight">-->
-<!--                {{ request.session.first_name }} {{ request.session.last_name }}-->
-<!--            </span>-->
-<!--        </div>-->
-<!--        <div class="row">-->
-<!--            <span>Mobile:</span>-->
-<!--            <span class="highlight">{{ request.session.mobile }}</span>-->
-<!--        </div>-->
-<!--        <div class="row">-->
-<!--            <span>Email:</span>-->
-<!--            <span class="highlight">{{ request.session.email }}</span>-->
-<!--        </div>-->
-<!--        <div class="row">-->
-<!--            <span>Address:</span>-->
-<!--            <span class="highlight">{{ request.session.address }}</span>-->
-<!--        </div>-->
-<!--        <div class="divider"></div>-->
-<!--        <div class="row">-->
-<!--            <span>Status:</span>-->
-<!--            <span class="status">Confirmed ✅</span>-->
-<!--        </div>-->
-<!--    <a href="{% url 'home' %}" class="btn">Book Another Ticket</a>-->
-<!--</div>-->
-<!--</body>-->
-<!--</html>-->
-
 <!DOCTYPE html>
 <html>
 <head>
-<title>Booking Success</title>
-
-<style>
-    body {
-        font-family: 'Segoe UI', sans-serif;
-        background: linear-gradient(to right, #1e293b, #0f172a);
-        margin: 0;
-        text-align: center;
-        color: white;
-    }
-
-    .container {
-        margin-top: 50px;
-    }
-
-    .success {
-        font-size: 32px;
-        color: #22c55e;
-        margin-bottom: 10px;
-        font-weight: bold;
-    }
-
-    .ticket {
-        width: 650px;
-        margin: 30px auto;
-        background: #111827;
-        border-radius: 20px;
-        padding: 35px;
-        box-shadow: 0 15px 40px rgba(0,0,0,0.5);
-        text-align: left;
-    }
-
-    .title {
-        font-size: 22px;
-        font-weight: bold;
-        margin-bottom: 20px;
-        color: #facc15;
-    }
-
-    .row {
-        display: flex;
-        justify-content: space-between;
-        margin-bottom: 12px;
-        font-size: 16px;
-    }
-
-    .highlight {
-        font-weight: bold;
-        color: #e2e8f0;
-    }
-
-    .divider {
-        border-top: 1px dashed #475569;
-        margin: 20px 0;
-    }
-
-    .status {
-        color: #22c55e;
-        font-weight: bold;
-    }
-
-    .btn {
-        margin-top: 25px;
-        display: inline-block;
-        padding: 14px 30px;
-        background: linear-gradient(to right, #2563eb, #1e40af);
-        color: white;
-        border-radius: 12px;
-        text-decoration: none;
-        font-size: 16px;
-    }
-
-</style>
+    <meta charset="UTF-8">
+    <title>Booking Success</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/success.css' %}">
 </head>
-
 <body>
+    <div class="success-banner">🎉 Booking confirmed</div>
+    <p class="subtext">Your bus ticket has been successfully booked.</p>
 
-<div class="container">
+    <div class="ticket">
+        <div class="ticket-title">Ticket details</div>
 
-    <div class="success">🎉 Booking Confirmed</div>
-    <p>Your ticket is successfully booked!</p>
+        <div class="row">
+            <span>Bus</span>
+            <span class="highlight">{{ booking.bus.name }}</span>
+        </div>
 
-</div>
+        <div class="row">
+            <span>Route</span>
+            <span class="highlight">{{ booking.bus.source }} → {{ booking.bus.destination }}</span>
+        </div>
 
-<div class="ticket">
+        <div class="row">
+            <span>Passenger</span>
+            <span class="highlight">{{ booking.passenger_name }}</span>
+        </div>
 
-    <div class="title">🚌 Ticket Details</div>
+        <div class="row">
+            <span>Seats</span>
+            <span class="highlight">{% for seat in selected_seats %}Seat {{ seat.seat_number }}{% if not forloop.last %}, {% endif %}{% endfor %}</span>
+        </div>
 
-    <div class="row">
-        <span>Bus ID:</span>
-        <span class="highlight">{{ request.session.bus_id }}</span>
+        <div class="row">
+            <span>Mobile</span>
+            <span class="highlight">{{ booking.mobile }}</span>
+        </div>
+
+        <div class="row">
+            <span>Status</span>
+            <span class="status">Confirmed ✅</span>
+        </div>
     </div>
 
-    <div class="row">
-        <span>Seats:</span>
-        <span class="highlight">
-            {% for seat in request.session.seat_ids %}
-                Seat {{ seat }}{% if not forloop.last %}, {% endif %}
-            {% endfor %}
-        </span>
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="title">🧍 Passenger Info</div>
-
-    <div class="row">
-        <span>Name:</span>
-        <span class="highlight">{{ request.session.first_name }}</span>
-    </div>
-
-    <div class="row">
-        <span>Mobile:</span>
-        <span class="highlight">{{ request.session.mobile }}</span>
-    </div>
-
-    <div class="divider"></div>
-
-    <div class="row">
-        <span>Status:</span>
-        <span class="status">Confirmed ✅</span>
-    </div>
-
-</div>
-
-<a href="{% url 'home' %}" class="btn">Book Another Ticket</a>
-
+    <a href="{% url 'home' %}" class="btn">Book another trip</a>
 </body>
 </html>

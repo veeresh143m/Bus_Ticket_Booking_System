@@ -1,327 +1,112 @@
-<!--<!DOCTYPE html>-->
-<!--<html>-->
-<!--<head>-->
-<!--    <title>Available Buses</title>-->
-<!--    <style>-->
-<!--        body {-->
-<!--            font-family: 'Segoe UI', sans-serif;-->
-<!--            background: #eef2f7;-->
-<!--            margin: 0;-->
-<!--        }-->
-<!--        header {-->
-<!--            background: white;-->
-<!--            padding: 20px 40px;-->
-<!--            font-size: 22px;-->
-<!--            font-weight: bold;-->
-<!--            box-shadow: 0 2px 10px rgba(0,0,0,0.1);-->
-<!--        }-->
-<!--        .container {-->
-<!--            padding: 30px 60px;-->
-<!--        }-->
-<!--        .bus-card {-->
-<!--            background: white;-->
-<!--            border-radius: 14px;-->
-<!--            padding: 25px;-->
-<!--            margin-bottom: 25px;-->
-<!--            display: flex;-->
-<!--            justify-content: space-between;-->
-<!--            align-items: center;-->
-<!--            box-shadow: 0 8px 20px rgba(0,0,0,0.08);-->
-<!--            transition: 0.3s;-->
-<!--        }-->
-<!--        .bus-card:hover {-->
-<!--            transform: scale(1.02);-->
-<!--        }-->
-<!--        .left {-->
-<!--            flex: 2;-->
-<!--        }-->
-<!--        .bus-name {-->
-<!--            font-size: 18px;-->
-<!--            font-weight: bold;-->
-<!--            color: #0f172a;-->
-<!--        }-->
-<!--        /* Route timeline */-->
-<!--        .route-box {-->
-<!--            display: flex;-->
-<!--            align-items: center;-->
-<!--            margin-top: 10px;-->
-<!--        }-->
-<!--        .city {-->
-<!--            font-size: 16px;-->
-<!--            font-weight: 600;-->
-<!--        }-->
-<!--        .line {-->
-<!--            flex: 1;-->
-<!--            height: 2px;-->
-<!--            background: #cbd5f5;-->
-<!--            margin: 0 10px;-->
-<!--            position: relative;-->
-<!--        }-->
-<!--        .line::before {-->
-<!--            content: "";-->
-<!--            position: absolute;-->
-<!--            left: 0;-->
-<!--            top: -4px;-->
-<!--            width: 10px;-->
-<!--            height: 10px;-->
-<!--            background: #4f46e5;-->
-<!--            border-radius: 50%;-->
-<!--        }-->
-<!--        .line::after {-->
-<!--            content: "";-->
-<!--            position: absolute;-->
-<!--            right: 0;-->
-<!--            top: -4px;-->
-<!--            width: 10px;-->
-<!--            height: 10px;-->
-<!--            background: #4f46e5;-->
-<!--            border-radius: 50%;-->
-<!--        }-->
-<!--        .details {-->
-<!--            margin-top: 8px;-->
-<!--            font-size: 13px;-->
-<!--            color: #64748b;-->
-<!--        }-->
-<!--        .tag {-->
-<!--            display: inline-block;-->
-<!--            margin-top: 6px;-->
-<!--            background: #dcfce7;-->
-<!--            color: #16a34a;-->
-<!--            padding: 4px 10px;-->
-<!--            border-radius: 6px;-->
-<!--            font-size: 12px;-->
-<!--        }-->
-<!--        .right {-->
-<!--            text-align: right;-->
-<!--        }-->
-<!--        .price {-->
-<!--            font-size: 24px;-->
-<!--            font-weight: bold;-->
-<!--            color: #111827;-->
-<!--        }-->
-<!--        .btn {-->
-<!--            margin-top: 10px;-->
-<!--            display: inline-block;-->
-<!--            padding: 10px 20px;-->
-<!--            background: #4f46e5;-->
-<!--            color: white;-->
-<!--            border-radius: 8px;-->
-<!--            text-decoration: none;-->
-<!--            font-size: 14px;-->
-<!--            transition: 0.3s;-->
-<!--        }-->
-
-<!--        .btn:hover {-->
-<!--            background: #4338ca;-->
-<!--        }-->
-<!--    </style>-->
-<!--</head>-->
-<!--<body>-->
-<!--<header>-->
-<!--    🚌 Explore Buses-->
-<!--</header>-->
-<!--<div class="container">-->
-<!--    {% for bus in buses %}-->
-<!--    <div class="bus-card">-->
-<!--        <div class="left">-->
-<!--            <div class="bus-name">{{ bus.name }}</div>-->
-<!--            <div class="route-box">-->
-<!--                <div class="city">{{ bus.source }}</div>-->
-<!--                <div class="line"></div>-->
-<!--                <div class="city">{{ bus.destination }}</div>-->
-<!--            </div>-->
-<!--            <div class="details">-->
-<!--                Smooth journey • Comfortable seats • On-time service-->
-<!--            </div>-->
-<!--            <div class="tag">Available Seats</div>-->
-<!--        </div>-->
-<!--        <div class="right">-->
-<!--            <div class="price">₹{{ bus.price }}</div>-->
-<!--            <a href="{% url 'seat' bus.id %}" class="btn">-->
-<!--                View Seats-->
-<!--            </a>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--    {% endfor %}-->
-<!--</div>-->
-<!--</body>-->
-<!--</html>-->
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Available Buses</title>
-
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: #eef2f7;
-            margin: 0;
-        }
-
-        header {
-            background: white;
-            padding: 18px 40px;
-            font-size: 22px;
-            font-weight: bold;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .user-box {
-            font-size: 14px;
-            color: #334155;
-        }
-
-        .logout {
-            margin-left: 10px;
-            padding: 6px 12px;
-            background: #ef4444;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-size: 12px;
-        }
-
-        .container {
-            padding: 30px 60px;
-        }
-
-        .bus-card {
-            background: white;
-            border-radius: 14px;
-            padding: 25px;
-            margin-bottom: 25px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-            transition: 0.3s;
-        }
-
-        .bus-card:hover {
-            transform: scale(1.02);
-        }
-
-        .bus-name {
-            font-size: 18px;
-            font-weight: bold;
-            color: #0f172a;
-        }
-
-        .route {
-            display: flex;
-            align-items: center;
-            margin-top: 8px;
-        }
-
-        .city {
-            font-size: 15px;
-            font-weight: 600;
-        }
-
-        .line {
-            flex: 1;
-            height: 2px;
-            background: #cbd5f5;
-            margin: 0 10px;
-        }
-
-        .price {
-            font-size: 22px;
-            font-weight: bold;
-            color: #111827;
-        }
-
-        .btn {
-            margin-top: 10px;
-            display: inline-block;
-            padding: 10px 18px;
-            background: #4f46e5;
-            color: white;
-            border-radius: 8px;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .btn:hover {
-            background: #4338ca;
-        }
-
-        .empty {
-            text-align: center;
-            padding: 60px;
-            color: #64748b;
-            font-size: 16px;
-        }
-
-    </style>
-
+    <meta charset="UTF-8">
+    <title>RouteRise | Bus Booking</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/home.css' %}">
 </head>
-
 <body>
 
-<header>
-
-    <div>🚌 Bus Booking System</div>
-
-    <div class="user-box">
-
-        {% if request.session.user %}
-            Welcome, <b>{{ request.session.user }}</b>
-            <a class="logout" href="/">Logout</a>
+<header class="topbar">
+    <div class="brand">Route<span>Rise</span></div>
+    <div class="nav-right">
+        {% if request.user.is_authenticated %}
+            <span>Welcome, {{ request.user.username }}</span>
+            <a class="nav-btn" href="{% url 'logout' %}">Logout</a>
         {% else %}
-            <a href="/">Login</a>
+            <a class="nav-link" href="{% url 'login' %}">Login</a>
+            <a class="nav-btn" href="{% url 'register' %}">Create account</a>
         {% endif %}
-
     </div>
-
 </header>
 
 <div class="container">
+    <section class="hero">
+        <div>
+            <h1>Travel smarter. Book your next ride in minutes.</h1>
+            <p>Choose from premium express buses, comfortable seats, and easy ticket booking for every route across the city and beyond.</p>
+
+            <div class="hero-actions">
+                <a href="#available-buses" class="primary-btn">Book now</a>
+                <a href="{% url 'login' %}" class="secondary-btn">Manage trips</a>
+            </div>
+
+            <div class="hero-stats">
+                <div class="stat"><strong>120+</strong><span>Routes</span></div>
+                <div class="stat"><strong>4.8/5</strong><span>Passenger rating</span></div>
+                <div class="stat"><strong>24/7</strong><span>Support team</span></div>
+            </div>
+        </div>
+
+        <div class="search-panel">
+            <h3>Find your trip</h3>
+            <form class="search-form" method="get" action="{% url 'home' %}">
+                <input type="text" name="source" value="{{ source }}" placeholder="From city" aria-label="From city">
+                <input type="text" name="destination" value="{{ destination }}" placeholder="To city" aria-label="To city">
+                <button type="submit">Search buses</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="features">
+        <div class="feature">
+            <div class="feature-icon">✅</div>
+            <h4>Easy booking</h4>
+            <p>Book a seat in a few clicks with a smooth and secure travel ticket flow.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">🚌</div>
+            <h4>Comfort-first rides</h4>
+            <p>Enjoy clean, safe, and comfortable bus journeys with dependable service.</p>
+        </div>
+        <div class="feature">
+            <div class="feature-icon">💬</div>
+            <h4>Real support</h4>
+            <p>Get quick help from friendly support whenever you need trip assistance.</p>
+        </div>
+    </section>
+
+    <div class="section-header" id="available-buses">
+        <h2>Available buses</h2>
+        <span>{% if buses %}{{ buses|length }} rides found{% else %}No rides for your search{% endif %}</span>
+    </div>
 
     {% if buses %}
+        <div class="bus-grid">
+            {% for bus in buses %}
+            <div class="bus-card">
+                <div class="bus-card-left">
+                    <span class="route-badge">{{ bus.name }}</span>
+                    <div class="bus-name">{{ bus.source }} to {{ bus.destination }}</div>
 
-        {% for bus in buses %}
+                    <div class="route-line">
+                        <span class="dot"></span>
+                        <span>{{ bus.source }}</span>
+                        <span class="line"></span>
+                        <span class="dot end"></span>
+                        <span>{{ bus.destination }}</span>
+                    </div>
 
-        <div class="bus-card">
-
-            <div>
-                <div class="bus-name">{{ bus.name }}</div>
-
-                <div class="route">
-                    <span class="city">{{ bus.source }}</span>
-                    <div class="line"></div>
-                    <span class="city">{{ bus.destination }}</span>
+                    <div class="meta-row">
+                        <span class="tag">Comfort AC</span>
+                        <span class="tag">40 seats</span>
+                        <span class="tag">On-time arrival</span>
+                    </div>
                 </div>
 
-                <div style="font-size:13px;color:#64748b;margin-top:5px;">
-                    Comfortable • Safe • On-time Travel
+                <div class="bus-card-right">
+                    <div class="price">₹{{ bus.price }}<small>/seat</small></div>
+                    <a href="{% url 'seat' bus.id %}" class="book-btn">Select seats</a>
                 </div>
             </div>
-
-            <div style="text-align:right;">
-                <div class="price">₹{{ bus.price }}</div>
-
-                <a href="{% url 'seat' bus.id %}" class="btn">
-                    View Seats
-                </a>
-            </div>
-
+            {% endfor %}
         </div>
-
-        {% endfor %}
-
     {% else %}
-
-        <div class="empty">
-            🚫 No buses available right now
+        <div class="empty-state">
+            No buses are available for the selected route yet. Try a different city pair or check back soon.
         </div>
-
     {% endif %}
-
 </div>
 
 </body>
