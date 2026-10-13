@@ -102,11 +102,17 @@ class SeatLock(models.Model):
 # =========================
 # AUTO CREATE SEATS (🔥 IMPORTANT)
 # =========================
+def ensure_bus_seats(bus):
+    existing_numbers = set(
+        Seat.objects.filter(bus=bus).values_list('seat_number', flat=True)
+    )
+    for seat_number in range(1, bus.total_seats + 1):
+        if seat_number not in existing_numbers:
+            Seat.objects.create(bus=bus, seat_number=seat_number)
+    return Seat.objects.filter(bus=bus).order_by('seat_number')
+
+
 @receiver(post_save, sender=Bus)
 def create_seats(sender, instance, created, **kwargs):
-    if created:
-        for i in range(1, instance.total_seats + 1):
-            Seat.objects.create(
-                bus=instance,
-                seat_number=i
-            )
+    if created or not Seat.objects.filter(bus=instance).exists():
+        ensure_bus_seats(instance)

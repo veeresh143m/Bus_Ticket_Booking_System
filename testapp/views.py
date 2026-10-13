@@ -65,7 +65,10 @@ def home_view(request):
 # =========================
 def seat_view(request, id):
     bus = get_object_or_404(Bus, id=id)
-    seats = Seat.objects.filter(bus=bus)
+    seats = Seat.objects.filter(bus=bus).order_by('seat_number')
+    if seats.count() < bus.total_seats:
+        from .models import ensure_bus_seats
+        seats = ensure_bus_seats(bus)
     request.session['bus_id'] = bus.id
     return render(request, 'testapp/seat.html', {
         'bus': bus,
