@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: bus-ticket-booking-system
+    env: python
+    plan: free
+    buildCommand: bash build.sh
+    startCommand: gunicorn bus_booking_project.wsgi:application
